@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html ng-app="liveBet">
+<head>
+  <meta charset="UTF-8">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	<script src="js/angular-translate.js"></script>
+	<link rel="stylesheet" href="flag-icon.css">
+	<link rel="stylesheet" href="style.css">
+	<script src="app.js"></script>
+	<title>Live Bet</title>
+</head>
+<body ng-controller="liveBetCtrl">
+		<nav class="navbar navbar-default navbar-fixed-top">
+		  	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav nav nav-tabs">
+				     <a class="navbar-brand" href="#">
+				       <h1>Livebet</h1>
+				     </a>
+			       	
+					  <li role="presentation"><a href="#">{{ 'SPORTS' | translate }}</a></li>
+					  <li role="presentation" class="active"><a href="#">{{ 'LIVE' | translate }}</a></li>
+					  <li role="presentation"><a href="#">{{ 'CASINO' | translate }}</a></li>					
+		      </ul>
+
+		       <ul class="nav navbar-nav navbar-right">
+		       		 <li role="presentation">
+					  	<div class="dropdown">
+						 	 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+						 	 <span class="flag-icon flag-icon-{{ 'key' | translate }}"></span>
+						 	 {{ 'lang' | translate }}
+						 	 <span class="caret"></span></button>
+						 	 <ul class="dropdown-menu">
+						 		<li><a href="#" ng-click="changeLanguage('tr')"><span class="flag-icon flag-icon-tr"></span>Türkçe</a></li>
+							    <li><a href="#" ng-click="changeLanguage('en')"><span class="flag-icon flag-icon-gb"></span>English</a></li>
+							    <li><a href="#" ng-click="changeLanguage('de')"><span class="flag-icon flag-icon-de"></span>Deutsch</a></li>
+							    <li><a href="#" ng-click="changeLanguage('ru')"><span class="flag-icon flag-icon-ru"></span>Pусский</a></li>
+							 </ul>
+						</div>
+					</li>
+		       </ul>
+
+		   
+		    </div>
+		</nav>
+		<div class="clearfix"></div>
+
+
+	<div class="row col-lg-9">
+
+		<table class="table table-sm table-bordered">
+			  <thead>
+			    <tr>
+			      	<th class="matchId">{{ 'MATCHID' | translate }}</th>
+					<th class="matchDate">{{ 'DATE' | translate }}</th>
+					<th class="matchTeams">{{ 'TEAMS' | translate }}</th>
+					<th class="wonHome">1</th>
+					<th class="tie">0</th>
+					<th class="wonAway">2</th>
+					<th class="under2.5">{{ 'UNDER' | translate }}</th>
+					<th class="over2.5">{{ 'OVER' | translate }}</th>
+					<th class="1-x">1/X</th>
+					<th class="1-2">1/2</th>
+					<th class="2-x">2/X</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <tr ng-repeat="item in match.items">
+			      	<td class="matchId">{{item.matchId}}</td>
+					<td class="matchDate" >{{item.matchDate}}</td>
+					<td class="matchTeams">
+						<span class="homeTeam">{{item.homeTeam}}</span> - 
+						<span class="awayTeam">{{item.awayTeam}}</span>
+					</td>
+                 
+                <td ng-class="{'active':isActive(odd, item)}" ng-click="addMatch(odd, item)" ng-repeat="odd in item.markets[0].odds">{{odd.odd}}</td>
+                <td ng-class="{'active':isActive(odd, item)}" ng-click="addMatch(odd, item)" ng-repeat="odd in item.markets[1].odds">{{odd.odd}}</td>
+                <td ng-class="{'active':isActive(odd, item)}" ng-click="addMatch(odd, item)" ng-repeat="odd in item.markets[2].odds">{{odd.odd}}</td>
+
+			    </tr>
+
+			  </tbody>
+			</table>
+	</div>
+
+ 
+<div class="coupon col-lg-2 col-lg-offset-1">
+	<h1 class="couponTitle">{{ 'TICKET' | translate }}</h1>
+	<ul class="matches">
+		<li ng-repeat="odd in coupon.odds" class="match">
+			<div class="couponHeader">
+				<span class="matchTeams"><span class="homeTeam">{{odd.home}}</span> - <span class="awayTeam">{{odd.away}}</span></span><br>
+			</div>
+			<div class="couponDetails">
+				<span class="playerBet">{{odd.name}}</span> 
+				<span class="ratio">{{odd.odd}}</span>
+			</div>
+			
+		</li>
+	</ul>
+
+	<ul class="couponButtons">
+		<li class="bet">
+			<span>{{ 'BET' | translate }}</span>
+			<input type="text" ng-model="coupon.bet">
+		</li>
+
+		<li class="betCount">
+			<span>{{ 'BETNO' | translate }}</span>
+			<input type="text" value="{{coupon.odds.length}}" disabled="disabled">
+		</li>
+		<li class="maxOdd">
+			<span>{{ 'MAXODD' | translate }}</span>
+			<input type="text" value="{{maxodd()}}" disabled="disabled">
+		</li>
+		<li class="maxWinning">
+			<span>{{ 'MAXWINNING' | translate }}</span>
+			<input type="text" ng-model="maxwin()">
+		</li>
+	</ul>
+</div>
+	
+
+
+
+	<script src="https://code.jquery.com/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>
